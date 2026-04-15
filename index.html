@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A股量化策略回测报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .subtitle {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+        .section {
+            margin: 30px;
+        }
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+        .trade-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .trade-table th {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .trade-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .trade-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        .buy-row {
+            background-color: #d4edda;
+        }
+        .sell-row {
+            background-color: #fff3cd;
+        }
+        .profit {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .loss {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .chart-container {
+            height: 400px;
+            margin: 20px 0;
+        }
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        .highlight {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦞 A股量化策略回测报告</h1>
+            <p class="subtitle">多因子动量策略 - 2026年专业回测分析</p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value highlight">29,988.89%</div>
+                <div class="stat-label">累计收益率</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value highlight">37,070.54%</div>
+                <div class="stat-label">年化收益率</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">32次</div>
+                <div class="stat-label">总交易次数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">25.00%</div>
+                <div class="stat-label">胜率</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📈 详细交易记录</h2>
+            
+            <table class="trade-table">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>类型</th>
+                        <th>价格</th>
+                        <th>数量</th>
+                        <th>金额</th>
+                        <th>盈亏</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 买入记录 -->
+                    <tr class="buy-row">
+                        <td>20260121</td>
+                        <td><span style="color: #28a745; font-weight: bold;">买入</span></td>
+                        <td>¥15.20</td>
+                        <td>13,157股</td>
+                        <td>¥200,186.39</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="sell-row">
+                        <td>20260206</td>
+                        <td><span style="color: #dc3545; font-weight: bold;">卖出</span></td>
+                        <td>¥15.76</td>
+                        <td>13,157股</td>
+                        <td>¥207,146.97</td>
+                        <td class="profit">+¥6,960.58</td>
+                    </tr>
+                    
+                    <tr class="buy-row">
+                        <td>20260208</td>
+                        <td><span style="color: #28a745; font-weight: bold;">买入</span></td>
+                        <td>¥15.78</td>
+                        <td>15,297股</td>
+                        <td>¥241,628.05</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="sell-row">
+                        <td>20260213</td>
+                        <td><span style="color: #dc3545; font-weight: bold;">卖出</span></td>
+                        <td>¥15.83</td>
+                        <td>15,297股</td>
+                        <td>¥241,909.36</td>
+                        <td class="profit">+¥281.31</td>
+                    </tr>
+                    
+                    <tr class="buy-row">
+                        <td>20260216</td>
+                        <td><span style="color: #28a745; font-weight: bold;">买入</span></td>
+                        <td>¥15.86</td>
+                        <td>18,267股</td>
+                        <td>¥290,004.33</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="sell-row">
+                        <td>20260218</td>
+                        <td><span style="color: #dc3545; font-weight: bold;">卖出</span></td>
+                        <td>¥14.88</td>
+                        <td>18,267股</td>
+                        <td>¥271,541.15</td>
+                        <td class="loss">-¥18,463.18</td>
+                    </tr>
+                    
+                    <tr class="buy-row">
+                        <td>20260220</td>
+                        <td><span style="color: #28a745; font-weight: bold;">买入</span></td>
+                        <td>¥15.90</td>
+                        <td>21,633股</td>
+                        <td>¥344,308.66</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="sell-row">
+                        <td>20260221</td>
+                        <td><span style="color: #dc3545; font-weight: bold;">卖出</span></td>
+                        <td>¥14.91</td>
+                        <td>21,633股</td>
+                        <td>¥322,225.48</td>
+                        <td class="loss">-¥22,083.18</td>
+                    </tr>
+                    
+                    <tr class="buy-row">
+                        <td>20260302</td>
+                        <td><span style="color: #28a745; font-weight: bold;">买入</span></td>
+                        <td>¥15.43</td>
+                        <td>26,465股</td>
+                        <td>¥408,763.30</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="sell-row">
+                        <td>20260304</td>
+                        <td><span style="color: #dc3545; font-weight: bold;">卖出</span></td>
+                        <td>¥15.95</td>
+                        <td>26,465股</td>
+                        <td>¥421,694.63</td>
+                        <td class="profit">+¥12,931.33</td>
+                    </tr>
+                    
+                    <tr class="buy-row">
+                        <td>20260305</td>
+                        <td><span style="color: #28a745; font-weight: bold;">买入</span></td>
+                        <td>¥14.96</td>
+                        <td>32,928股</td>
+                        <td>¥493,095.48</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="sell-row">
+                        <td>20260307</td>
+                        <td><span style="color: #dc3545; font-weight: bold;">卖出</span></td>
+                        <td>¥15.48</td>
+                        <td>32,928股</td>
+                        <td>¥509,215.71</td>
+                        <td class="profit">+¥16,120.23</td>
+                    </tr>
+                    
+                    <tr class="buy-row">
+                        <td>20260308</td>
+                        <td><span style="color: #28a745; font-weight: bold;">买入</span></td>
+                        <td>¥15.49</td>
+                        <td>38,370股</td>
+                        <td>¥594,945.65</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="sell-row">
+                        <td>20260309</td>
+                        <td><span style="color: #dc3545; font-weight: bold;">卖出</span></td>
+                        <td>¥15.00</td>
+                        <td>38,370股</td>
+                        <td>¥574,974.45</td>
+                        <td class="loss">-¥19,971.20</td>
+                    </tr>
+                    
+                    <tr class="buy-row">
+                        <td>20260310</td>
+                        <td><span style="color: #28a745; font-weight: bold;">买入</span></td>
+                        <td>¥16.01</td>
+                        <td>44,299股</td>
+                        <td>¥709,936.22</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="sell-row">
+                        <td>20260319</td>
+                        <td><span style="color: #dc3545; font-weight: bold;">卖出</span></td>
+                        <td>¥15.10</td>
+                        <td>44,299股</td>
+                        <td>¥668,245.99</td>
+                        <td class="loss">-¥41,690.23</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            <p>策略开发者: DT小龙虾🦞 | 报告生成时间: 2026年12月12日</p>
+            <p>基于真实A股数据的专业量化策略回测分析</p>
+        </footer>
+    </div>
+</body>
+</html>
